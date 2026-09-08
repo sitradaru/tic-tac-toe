@@ -26,17 +26,96 @@ function gameBoard() {
         
         if(targetCell.getValue()==="") {
             targetCell.setValue(playerMark);
+            return true;
         }
+
+        return false;
     }
 
     const printValues = () => {
-        const cellValues = board.map(row => {
-            return row.map(column => column.getValue())
-        }
+        const cellValues = board.map(row => 
+             row.map(column => column.getValue())
         )
 
-        return cellValues;
+        console.log(cellValues);
     }
 
     return { getBoard, updateBoard, printValues }
 }
+
+function gameController() {
+
+    const game = gameBoard();
+    const board = game.getBoard();
+    
+    const players = [
+        {
+            name:"player1",
+            mark:"X"
+        },
+
+        {
+            name:"player2",
+            mark:"O"
+        }
+    ];
+
+    let activePlayer = players[0];
+    const getActivePlayer = () => activePlayer;
+    const switchActivePlayer = () => {
+        activePlayer = activePlayer===players[0]? players[1] : players[0];
+    }
+
+    const checkWinner = (playerMark) => {
+
+        const winningCondition = [
+            [board[0][0], board[0][1], board[0][2]],
+            [board[1][0], board[1][1], board[1][2]],
+            [board[2][0], board[2][1], board[2][2]],
+            [board[0][0], board[1][0], board[2][0]],
+            [board[0][1], board[1][1], board[2][1]],
+            [board[0][2], board[1][2], board[2][2]],
+            [board[0][0], board[1][1], board[2][2]],
+            [board[0][2], board[1][1], board[2][0]]
+        ]
+
+        return winningCondition.some(combination => 
+            combination.every(element => element.getValue()===playerMark)
+        )
+    }
+
+    const checkTie = () => {
+        return board.every(row => 
+            row.every(cell => cell.getValue())
+        )
+    }
+
+    const printNewRound = () => {
+        game.printValues();
+        console.log(`It is ${getActivePlayer().name}'s turn.`);
+    }
+
+    const playRound = (row, column) => {
+        const isChanged = game.updateBoard(row, column, getActivePlayer().mark)
+        if(!isChanged) { return }
+
+        if(checkWinner(getActivePlayer().mark)) { 
+            console.log(`${getActivePlayer().name} won this round`);
+            printNewRound();
+            return;
+         }
+        if(checkTie()) { 
+            console.log(`It is a tie.`);
+            printNewRound();
+            return;
+        }
+
+        switchActivePlayer();
+        printNewRound();
+    }
+
+    printNewRound();
+
+    return { playRound, getBoard: game.getBoard }
+}
+
