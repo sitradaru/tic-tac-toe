@@ -1,3 +1,5 @@
+const gameGrid = document.querySelector(".gameboard");
+
 function cell() {
     let value = "";
 
@@ -102,12 +104,12 @@ function gameController() {
         if(checkWinner(getActivePlayer().mark)) { 
             console.log(`${getActivePlayer().name} won this round`);
             printNewRound();
-            return;
+            return "winner";
          }
         if(checkTie()) { 
             console.log(`It is a tie.`);
             printNewRound();
-            return;
+            return "tie";
         }
 
         switchActivePlayer();
@@ -116,6 +118,43 @@ function gameController() {
 
     printNewRound();
 
-    return { playRound, getBoard: game.getBoard }
+    return { playRound, getActivePlayer, getBoard: game.getBoard }
 }
+
+const screenController = (() => {
+    const xoGame = gameController();
+    const xoBoard = xoGame.getBoard();
+    
+    const updateScreen = () => {
+        gameGrid.innerHTML = "";
+        xoBoard.forEach((cells, rowIndex) => {
+        cells.forEach((cell, columnIndex) => {
+            const boardCell = document.createElement("button");
+            boardCell.classList.add("boardCell");
+            boardCell.textContent = cell.getValue();
+            boardCell.dataset.row = rowIndex;
+            boardCell.dataset.column = columnIndex;
+            gameGrid.appendChild(boardCell);
+        })
+    })
+    }
+
+    let gameState = "";
+    gameGrid.addEventListener("click", (event) => {
+        if(gameState==="winner") {
+            return;
+        }
+        if(gameState==="tie") {
+            return;
+        }
+        const cell = event.target.closest(".boardCell");
+        if(!cell) return;
+        const rowIndex = Number(cell.dataset.row);
+        const columnIndex = Number(cell.dataset.column);
+        gameState = xoGame.playRound(rowIndex, columnIndex);
+        updateScreen();
+    })
+
+    updateScreen();
+})();
 

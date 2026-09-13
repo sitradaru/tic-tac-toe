@@ -1,0 +1,9 @@
+@font-face {
+    font-family: 'Chillin on Sunday';
+    src: url('ChillinonSunday.woff2') format('woff2'),
+        url('ChillinonSunday.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
