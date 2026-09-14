@@ -1,4 +1,12 @@
 const gameGrid = document.querySelector(".gameboard");
+const registerDialog = document.querySelector(".player-registration");
+const playersForm = document.querySelector(".playersForm");
+const player1Name = document.querySelector("#player1");
+const player2Name = document.querySelector("#player2");
+const playerOne = document.querySelector(".player1");
+const playerTwo = document.querySelector(".player2");
+
+registerDialog.showModal();
 
 function cell() {
     let value = "";
@@ -52,12 +60,12 @@ function gameController() {
     
     const players = [
         {
-            name:"player1",
+            name:"Player1",
             mark:"X"
         },
 
         {
-            name:"player2",
+            name:"Player2",
             mark:"O"
         }
     ];
@@ -67,6 +75,12 @@ function gameController() {
     const switchActivePlayer = () => {
         activePlayer = activePlayer===players[0]? players[1] : players[0];
     }
+    const setPlayerName = (playerName, player) => {
+        players[player].name = playerName;
+        console.log(players);
+    }
+
+    const getPlayerName = (player) => players[player].name;
 
     const checkWinner = (playerMark) => {
 
@@ -118,7 +132,7 @@ function gameController() {
 
     printNewRound();
 
-    return { playRound, getActivePlayer, getBoard: game.getBoard }
+    return { playRound, getActivePlayer, setPlayerName, getPlayerName, getBoard: game.getBoard }
 }
 
 const screenController = (() => {
@@ -127,6 +141,8 @@ const screenController = (() => {
     
     const updateScreen = () => {
         gameGrid.innerHTML = "";
+        playerOne.textContent = xoGame.getPlayerName(0);
+        playerTwo.textContent = xoGame.getPlayerName(1);
         xoBoard.forEach((cells, rowIndex) => {
         cells.forEach((cell, columnIndex) => {
             const boardCell = document.createElement("button");
@@ -152,6 +168,16 @@ const screenController = (() => {
         const rowIndex = Number(cell.dataset.row);
         const columnIndex = Number(cell.dataset.column);
         gameState = xoGame.playRound(rowIndex, columnIndex);
+        updateScreen();
+    })
+
+    playersForm.addEventListener("submit", (event) => {
+        event.preventDefault();
+        const pOneName = player1Name.value;
+        const pTwoName = player2Name.value;
+        xoGame.setPlayerName(pOneName, 0);
+        xoGame.setPlayerName(pTwoName, 1);
+        registerDialog.close();
         updateScreen();
     })
 

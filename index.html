@@ -8,8 +8,23 @@
     <link rel="stylesheet" href="./style.css">
 </head>
 <body>
-
-    <div class="gameboard"></div>
+    <dialog class="player-registration">
+        <form class="playersForm">
+            <label for="player1">Player One Name:</label>
+            <input type="text" id="player1" name="player1-name" value="Player1">
+            <label for="player2">Player Two Name:</label>
+            <input type="text" id="player2" name="player-name" value="Player2">
+            <button type="submit" class="game-control">Start Game</button>
+        </form>
+    </dialog>
+    <h1>Tic Tac Toe</h1>
+    <main>
+        <div class="players">
+            <h2 class="player1"></h2>
+            <h2 class="player2"></h2>
+        </div>
+        <div class="gameboard"></div>
+    </main>
     
     <script src="./script.js"></script>
 </body>
