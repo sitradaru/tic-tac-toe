@@ -8,9 +8,9 @@
 }
 
 :root {
-    --player1-color: #bc0000e8;
-    --player2-color: #0303dbe6;
-    --text-color: #dfdcd9;
+    --player1-color: #ffb3b3;
+    --player2-color: #b3b3ff;
+    --text-color: black;
 }
 
 *,
@@ -86,10 +86,10 @@ input {
 h1 {
     padding: .5em 1em;
     text-align: center;
-    font-size: 4rem;
+    font-size: 4.5rem;
     margin-bottom: 1em;
 
-    text-shadow: 3px 3px 6px black;
+    text-shadow: 3px 3px 6px white;
     /* color: white; */
 }
 
@@ -97,19 +97,46 @@ main {
     display: flex;
     flex-direction: column;
     align-items: center;
+
+    width: 40vw;
+    margin: 0 auto;
+    background-color: white;
+    border-radius: 12px;
+    padding: 2rem;
 }
 
 .players {
     display: flex;
-    gap: 8em;
+    justify-content: space-between;
 
-    font-size: 1.7rem;
+    font-size: 1.5rem;
     text-transform: capitalize;
+    width: 100%;
 }
 
-.activePlayer {
-    font-size: 2rem;
-    text-shadow: 2px 2px 6px black;
+.player1, 
+.player2 {
+    transition: 200ms ease-in;
+}
+
+.active-player-one {
+    font-size: 3rem;
+    text-shadow: 2px 2px 6px white;
+    padding: .7rem 1.7rem;
+    background-color: var(--player1-color);
+    border: none;
+    border-radius: 32px;
+    transition: 400ms ease-in-out;
+}
+
+.active-player-two {
+    font-size: 3rem;
+    text-shadow: 2px 2px 6px white;
+    padding: .5rem 1.5rem;
+    background-color: var(--player2-color);
+    border: none;
+    border-radius: 32px;
+    transition: 400ms ease-in-out;
 }
 
 .gameboard {
@@ -119,14 +146,14 @@ main {
 
     background-color: var(--text-color);
     border: none;
-    margin: 3em 0;
+    margin: 2em 0;
 }
 
 .boardCell {
     box-sizing: content-box;
     padding: .5rem;
     border: none;
-    background-color: var(--player1-color);
+    background-color: white;
     color: var(--text-color);
     width: 5rem;
     height: 5rem;
@@ -135,4 +162,9 @@ main {
     font-weight: bold;
     font-family: 'Chillin on Sunday';
     /* background-color: blueviolet; */
+}
+
+.blue-bg {
+    background-color:var(--player2-color);
+    transition: 400ms ease-in-out;
 }

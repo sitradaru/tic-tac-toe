@@ -5,6 +5,7 @@ const player1Name = document.querySelector("#player1");
 const player2Name = document.querySelector("#player2");
 const playerOne = document.querySelector(".player1");
 const playerTwo = document.querySelector(".player2");
+const page = document.querySelector("body");
 
 registerDialog.showModal();
 
@@ -143,10 +144,23 @@ const screenController = (() => {
         gameGrid.innerHTML = "";
         playerOne.textContent = xoGame.getPlayerName(0);
         playerTwo.textContent = xoGame.getPlayerName(1);
+    
+        if(xoGame.getActivePlayer().mark==="O") { 
+            playerTwo.classList.add("active-player-two");
+            playerOne.classList.remove("active-player-one");
+            page.classList.add("blue-bg");
+        } 
+        else {
+            playerTwo.classList.remove("active-player-two");
+            playerOne.classList.add("active-player-one");
+            page.classList.remove("blue-bg");
+        }
+
         xoBoard.forEach((cells, rowIndex) => {
         cells.forEach((cell, columnIndex) => {
             const boardCell = document.createElement("button");
             boardCell.classList.add("boardCell");
+            // xoGame.getActivePlayer().mark==="O"?  boardCell.classList.add("blue-bg"): boardCell.classList.remove("blue-bg");
             boardCell.textContent = cell.getValue();
             boardCell.dataset.row = rowIndex;
             boardCell.dataset.column = columnIndex;
@@ -180,7 +194,5 @@ const screenController = (() => {
         registerDialog.close();
         updateScreen();
     })
-
-    updateScreen();
 })();
 
