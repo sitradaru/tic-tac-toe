@@ -8,6 +8,7 @@ const playerTwo = document.querySelector(".player2");
 const page = document.querySelector("body");
 const resultsDiv = document.querySelector(".result");
 const restartBtn = document.querySelector(".restart-btn");
+const resultPara = document.querySelector(".result-para");
 
 registerDialog.showModal();
 
@@ -139,41 +140,15 @@ function gameController() {
 }
 
 const screenController = (() => {
-    const xoGame = gameController();
-    const xoBoard = xoGame.getBoard();
-    const resultPara = document.createElement("p");
-    
-
-    const updateScreen = () => {
-        gameGrid.innerHTML = "";
-        playerOne.textContent = xoGame.getPlayerName(0);
-        playerTwo.textContent = xoGame.getPlayerName(1);
-    
-        if(xoGame.getActivePlayer().mark==="O") { 
-            playerTwo.classList.add("active-player-two");
-            playerOne.classList.remove("active-player-one");
-            page.classList.add("blue-bg");
-        } 
-        else {
-            playerTwo.classList.remove("active-player-two");
-            playerOne.classList.add("active-player-one");
-            page.classList.remove("blue-bg");
-        }
-
-        xoBoard.forEach((cells, rowIndex) => {
-        cells.forEach((cell, columnIndex) => {
-            const boardCell = document.createElement("button");
-            boardCell.classList.add("boardCell");
-            // xoGame.getActivePlayer().mark==="O"?  boardCell.classList.add("blue-bg"): boardCell.classList.remove("blue-bg");
-            boardCell.textContent = cell.getValue();
-            boardCell.dataset.row = rowIndex;
-            boardCell.dataset.column = columnIndex;
-            gameGrid.appendChild(boardCell);
-        })
-    })
-    }
-
+    let xoGame;
+    let xoBoard;
     let gameState = "";
+    // resultPara.textContent = "";
+    // restartBtn.classList.remove("replay");
+    xoGame = gameController();
+    xoBoard = xoGame.getBoard();
+    updateScreen();
+
     const handleCellClick = (event) => {
 
         const cell = event.target.closest(".boardCell");
@@ -185,13 +160,11 @@ const screenController = (() => {
         
         if(gameState==="winner") {
             resultPara.textContent = `${xoGame.getActivePlayer().name} won this round!`;
-            resultsDiv.appendChild(resultPara);
             restartBtn.classList.add("replay");
             gameGrid.removeEventListener("click", handleCellClick);
         }
         if(gameState==="tie") {
             resultPara.textContent = `It is a tie!`;
-            resultsDiv.appendChild(resultPara);
             restartBtn.classList.add("replay");
             gameGrid.removeEventListener("click", handleCellClick);
         }
@@ -207,6 +180,42 @@ const screenController = (() => {
         registerDialog.close();
         updateScreen();
     })
-    updateScreen();
+    restartBtn.addEventListener("click", () => {
+        // resultPara.textContent = "";
+        // restartBtn.classList.remove("replay");
+        xoGame = gameController();
+        xoBoard = xoGame.getBoard();
+        gameGrid.addEventListener("click", handleCellClick);
+        updateScreen();
+    })
+
+    function updateScreen() {
+        gameGrid.innerHTML = "";
+        playerOne.textContent = xoGame.getPlayerName(0);
+        playerTwo.textContent = xoGame.getPlayerName(1);
+
+        if(xoGame.getActivePlayer().mark==="O") { 
+            playerTwo.classList.add("active-player-two");
+            playerOne.classList.remove("active-player-one");
+            page.classList.add("blue-bg");
+        } 
+        else {
+            playerTwo.classList.remove("active-player-two");
+            playerOne.classList.add("active-player-one");
+            page.classList.remove("blue-bg");
+        }
+
+        xoBoard.forEach((cells, rowIndex) => {
+        cells.forEach((cell, columnIndex) => {
+            const boardCell = document.createElement("button");
+            boardCell.classList.add("boardCell");
+            boardCell.textContent = cell.getValue();
+            boardCell.dataset.row = rowIndex;
+            boardCell.dataset.column = columnIndex;
+            gameGrid.appendChild(boardCell);
+        })
+    })
+    }
 })();
+
 
