@@ -6,6 +6,8 @@ const player2Name = document.querySelector("#player2");
 const playerOne = document.querySelector(".player1");
 const playerTwo = document.querySelector(".player2");
 const page = document.querySelector("body");
+const resultsDiv = document.querySelector(".result");
+const restartBtn = document.querySelector(".restart-btn");
 
 registerDialog.showModal();
 
@@ -139,7 +141,9 @@ function gameController() {
 const screenController = (() => {
     const xoGame = gameController();
     const xoBoard = xoGame.getBoard();
+    const resultPara = document.createElement("p");
     
+
     const updateScreen = () => {
         gameGrid.innerHTML = "";
         playerOne.textContent = xoGame.getPlayerName(0);
@@ -170,20 +174,29 @@ const screenController = (() => {
     }
 
     let gameState = "";
-    gameGrid.addEventListener("click", (event) => {
-        if(gameState==="winner") {
-            return;
-        }
-        if(gameState==="tie") {
-            return;
-        }
+    const handleCellClick = (event) => {
+
         const cell = event.target.closest(".boardCell");
         if(!cell) return;
         const rowIndex = Number(cell.dataset.row);
         const columnIndex = Number(cell.dataset.column);
         gameState = xoGame.playRound(rowIndex, columnIndex);
         updateScreen();
-    })
+        
+        if(gameState==="winner") {
+            resultPara.textContent = `${xoGame.getActivePlayer().name} won this round!`;
+            resultsDiv.appendChild(resultPara);
+            restartBtn.classList.add("replay");
+            gameGrid.removeEventListener("click", handleCellClick);
+        }
+        if(gameState==="tie") {
+            resultPara.textContent = `It is a tie!`;
+            resultsDiv.appendChild(resultPara);
+            restartBtn.classList.add("replay");
+            gameGrid.removeEventListener("click", handleCellClick);
+        }
+    }
+    gameGrid.addEventListener("click", handleCellClick);
 
     playersForm.addEventListener("submit", (event) => {
         event.preventDefault();
@@ -194,5 +207,6 @@ const screenController = (() => {
         registerDialog.close();
         updateScreen();
     })
+    updateScreen();
 })();
 

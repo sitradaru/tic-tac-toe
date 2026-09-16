@@ -19,7 +19,6 @@
     padding: 0;
     margin: 0;
     box-sizing: border-box;
-    /* border: 3px solid black; */
 }
 
 body {
@@ -33,7 +32,7 @@ body {
     width: 30vw;
     padding: 1em 3em;
     margin: auto;
-    background-color: #F3F0EA;
+    background-color: white;
     border-radius: 15px;
     border: none;
 }
@@ -62,7 +61,7 @@ input {
     margin-bottom: .5em;
     height: 1.5em;
     border-radius: 8px;
-    border: 2px solid gray;
+    border: 2px solid #696969;
     padding: .5em;
     font-family: inherit;
 }
@@ -73,14 +72,30 @@ input {
     font-weight: 300;
     border-radius: 25px;
     border: none;
-    background-color: var(--player1-color);
-    color: var(--text-color);
+    background-color: black;
+    color: white;
     font-size: 1.5rem;
 }
 
 .game-control:hover {
     cursor: pointer;
-    background-color: #880202;
+    background-color: #696969;
+}
+
+.restart-btn {
+    display: none;
+}
+
+.replay {
+    display: block;
+}
+
+.game-conclusion{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    margin: 2em;
 }
 
 h1 {
@@ -90,7 +105,6 @@ h1 {
     margin-bottom: 1em;
 
     text-shadow: 3px 3px 6px white;
-    /* color: white; */
 }
 
 main {
@@ -112,11 +126,12 @@ main {
     font-size: 1.5rem;
     text-transform: capitalize;
     width: 100%;
+    transition: 200ms ease-in;
 }
 
 .player1, 
 .player2 {
-    transition: 200ms ease-in;
+    
 }
 
 .active-player-one {
@@ -167,4 +182,9 @@ main {
 .blue-bg {
     background-color:var(--player2-color);
     transition: 400ms ease-in-out;
+}
+
+.result {
+    font-size: 3rem;
+    text-shadow: 4px 4px 8px white;
 }

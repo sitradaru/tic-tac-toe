@@ -10,11 +10,11 @@
 <body class="blue-bg">
     <dialog class="player-registration">
         <form class="playersForm">
-            <label for="player1">Player One Name:</label>
+            <label for="player1">Player One Name(X):</label>
             <input type="text" id="player1" name="player1-name" value="Player1">
-            <label for="player2">Player Two Name:</label>
+            <label for="player2">Player Two Name(O):</label>
             <input type="text" id="player2" name="player-name" value="Player2">
-            <button type="submit" class="game-control">Start Game</button>
+            <button type="submit" class="game-control start-btn">Start Game</button>
         </form>
     </dialog>
     <h1>Tic Tac Toe</h1>
@@ -25,6 +25,12 @@
         </div>
         <div class="gameboard"></div>
     </main>
+
+    <div class="game-conclusion">
+        <div class="result"></div>
+        <button class="game-control restart-btn">Restart Game</button>
+    </div>
+    
     
     <script src="./script.js"></script>
 </body>
