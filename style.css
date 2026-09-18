@@ -10,7 +10,7 @@
 :root {
     --player1-color: #ffb3b3;
     --player2-color: #b3b3ff;
-    --text-color: black;
+    --subtle-color: #696969;
 }
 
 *,
@@ -25,14 +25,12 @@ body {
     font-family: 'Chillin on Sunday';
 
     background-color:var(--player1-color);
-    color:var(--text-color);
 }
 
 .player-registration {
     width: 30vw;
     padding: 1em 3em;
     margin: auto;
-    background-color: white;
     border-radius: 15px;
     border: none;
 }
@@ -61,7 +59,7 @@ input {
     margin-bottom: .5em;
     height: 1.5em;
     border-radius: 8px;
-    border: 2px solid #696969;
+    border: 2px solid var(--subtle-color);
     padding: .5em;
     font-family: inherit;
 }
@@ -79,15 +77,11 @@ input {
 
 .game-control:hover {
     cursor: pointer;
-    background-color: #696969;
+    background-color: var(--subtle-color);
 }
 
-.restart-btn {
+.hidden {
     display: none;
-}
-
-.replay {
-    display: block;
 }
 
 .game-conclusion{
@@ -154,11 +148,11 @@ main {
 }
 
 .gameboard {
-    display: inline-grid;
+    display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 1em;
 
-    background-color: var(--text-color);
+    background-color: black;
     border: none;
     margin: 2em 0;
 }
@@ -168,13 +162,12 @@ main {
     padding: .5rem;
     border: none;
     background-color: white;
-    color: var(--text-color);
     width: 5rem;
     height: 5rem;
 
     font-size: 5rem;
     font-weight: bold;
-    font-family: 'Chillin on Sunday';
+    font-family: inherit;
 }
 
 .blue-bg {

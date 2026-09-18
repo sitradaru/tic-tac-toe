@@ -6,7 +6,6 @@ const player2Name = document.querySelector("#player2");
 const playerOne = document.querySelector(".player1");
 const playerTwo = document.querySelector(".player2");
 const page = document.querySelector("body");
-const resultsDiv = document.querySelector(".result");
 const restartBtn = document.querySelector(".restart-btn");
 const resultPara = document.querySelector(".result-para");
 
@@ -46,15 +45,15 @@ function gameBoard() {
         return false;
     }
 
-    const printValues = () => {
-        const cellValues = board.map(row => 
-             row.map(column => column.getValue())
-        )
+    const resetBoard = () => {
+        for (let row of board) {
+            for (let cellData of row) {
+                cellData.setValue("");
+            }
+        }
+    };
 
-        console.log(cellValues);
-    }
-
-    return { getBoard, updateBoard, printValues }
+    return { getBoard, updateBoard, resetBoard }
 }
 
 function gameController() {
@@ -65,26 +64,27 @@ function gameController() {
     const players = [
         {
             name:"Player1",
-            mark:"X"
+            mark:"X",
+            score: 0,
         },
 
         {
             name:"Player2",
-            mark:"O"
+            mark:"O",
+            score: 0,
         }
     ];
 
     let activePlayer = players[0];
     const getActivePlayer = () => activePlayer;
-    const switchActivePlayer = () => {
-        activePlayer = activePlayer===players[0]? players[1] : players[0];
-    }
-    const setPlayerName = (playerName, player) => {
-        players[player].name = playerName;
-        console.log(players);
-    }
-
+    const switchActivePlayer = () => activePlayer = activePlayer===players[0]? players[1] : players[0];
+    const resetActivePlayer = () => activePlayer = players[0];
+    
+    const setPlayerName = (playerName, player) => players[player].name = playerName;
     const getPlayerName = (player) => players[player].name;
+
+    const getPlayerScore = (player) => players[player].score;
+    const incrementPlayerScore = (player) => players[player].score++;
 
     const checkWinner = (playerMark) => {
 
@@ -110,43 +110,27 @@ function gameController() {
         )
     }
 
-    const printNewRound = () => {
-        game.printValues();
-        console.log(`It is ${getActivePlayer().name}'s turn.`);
-    }
-
     const playRound = (row, column) => {
+
         const isChanged = game.updateBoard(row, column, getActivePlayer().mark)
         if(!isChanged) { return }
-
-        if(checkWinner(getActivePlayer().mark)) { 
-            console.log(`${getActivePlayer().name} won this round`);
-            printNewRound();
-            return "winner";
-         }
-        if(checkTie()) { 
-            console.log(`It is a tie.`);
-            printNewRound();
-            return "tie";
-        }
+        if(checkWinner(getActivePlayer().mark)) { return "winner" }
+        if(checkTie()) { return "tie" }
 
         switchActivePlayer();
-        printNewRound();
     }
 
-    printNewRound();
-
-    return { playRound, getActivePlayer, setPlayerName, getPlayerName, getBoard: game.getBoard }
+    return { playRound, getActivePlayer, resetActivePlayer, setPlayerName, getPlayerName, incrementPlayerScore, getPlayerScore, getBoard: game.getBoard, resetBoard: game.resetBoard }
 }
 
 const screenController = (() => {
     let xoGame;
     let xoBoard;
     let gameState = "";
-    // resultPara.textContent = "";
-    // restartBtn.classList.remove("replay");
+   
     xoGame = gameController();
     xoBoard = xoGame.getBoard();
+
     updateScreen();
 
     const handleCellClick = (event) => {
@@ -156,18 +140,24 @@ const screenController = (() => {
         const rowIndex = Number(cell.dataset.row);
         const columnIndex = Number(cell.dataset.column);
         gameState = xoGame.playRound(rowIndex, columnIndex);
-        updateScreen();
         
         if(gameState==="winner") {
             resultPara.textContent = `${xoGame.getActivePlayer().name} won this round!`;
-            restartBtn.classList.add("replay");
+            restartBtn.classList.remove("hidden");
+            if(xoGame.getActivePlayer().mark==="O") {
+                xoGame.incrementPlayerScore(1);
+            }
+            else {
+                xoGame.incrementPlayerScore(0);
+            }
             gameGrid.removeEventListener("click", handleCellClick);
         }
         if(gameState==="tie") {
             resultPara.textContent = `It is a tie!`;
-            restartBtn.classList.add("replay");
+            restartBtn.classList.remove("hidden");
             gameGrid.removeEventListener("click", handleCellClick);
         }
+        updateScreen();
     }
     gameGrid.addEventListener("click", handleCellClick);
 
@@ -180,19 +170,22 @@ const screenController = (() => {
         registerDialog.close();
         updateScreen();
     })
+
     restartBtn.addEventListener("click", () => {
-        // resultPara.textContent = "";
-        // restartBtn.classList.remove("replay");
-        xoGame = gameController();
-        xoBoard = xoGame.getBoard();
+        resultPara.textContent = "";
+        restartBtn.classList.add("hidden");
+       
+        xoGame.resetBoard();
+        xoGame.resetActivePlayer();
+        
         gameGrid.addEventListener("click", handleCellClick);
         updateScreen();
     })
 
     function updateScreen() {
         gameGrid.innerHTML = "";
-        playerOne.textContent = xoGame.getPlayerName(0);
-        playerTwo.textContent = xoGame.getPlayerName(1);
+        playerOne.textContent = `${xoGame.getPlayerName(0)}: ${xoGame.getPlayerScore(0)}`;
+        playerTwo.textContent = `${xoGame.getPlayerName(1)}: ${xoGame.getPlayerScore(1)}`;
 
         if(xoGame.getActivePlayer().mark==="O") { 
             playerTwo.classList.add("active-player-two");
@@ -206,15 +199,15 @@ const screenController = (() => {
         }
 
         xoBoard.forEach((cells, rowIndex) => {
-        cells.forEach((cell, columnIndex) => {
-            const boardCell = document.createElement("button");
-            boardCell.classList.add("boardCell");
-            boardCell.textContent = cell.getValue();
-            boardCell.dataset.row = rowIndex;
-            boardCell.dataset.column = columnIndex;
-            gameGrid.appendChild(boardCell);
+            cells.forEach((cell, columnIndex) => {
+                const boardCell = document.createElement("button");
+                boardCell.classList.add("boardCell");
+                boardCell.textContent = cell.getValue();
+                boardCell.dataset.row = rowIndex;
+                boardCell.dataset.column = columnIndex;
+                gameGrid.appendChild(boardCell);
+            })
         })
-    })
     }
 })();
 
